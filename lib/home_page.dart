@@ -9,8 +9,10 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     int counter = 0;
+    TextEditingController hourController = TextEditingController();
+    TextEditingController minuteController = TextEditingController();
     return Scaffold(
-      backgroundColor: Colors.blueGrey,
+      backgroundColor: Colors.blue,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -28,11 +30,47 @@ class HomePage extends StatelessWidget {
               child: Text('Send notification'),
             ),
             const SizedBox(height: 20),
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+                color: Colors.purple,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: hourController,
+                      decoration: InputDecoration(
+                        hintText: 'Hours',
+                        hintStyle: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 20,
+                  ),
+                  Expanded(
+                    child: TextField(
+                      controller: minuteController,
+                      decoration: InputDecoration(
+                        hintText: 'Minutes',
+                        hintStyle: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
             ElevatedButton(
               onPressed: () {
                 //NotificationService().initNotification;
-                int hour = 16;
-                int minute = 33;
+                int hour = int.parse(hourController.text);
+                int minute = int.parse(minuteController.text);
                 NotificationService().scheduledNotification(
                   title: 'Scheduled notification',
                   body: 'Scheduled notification test',
@@ -43,6 +81,14 @@ class HomePage extends StatelessWidget {
                 log("Daily Scheduled Notification Time : $hour : $minute");
               },
               child: Text('Send scheduled notification'),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                NotificationService().cancelAllNotifications();
+                log("All notifications cancelled successfully");
+              },
+              child: Text('Cancel all notifications'),
             ),
           ],
         ),

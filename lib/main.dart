@@ -4,7 +4,7 @@ import 'package:notifications_demo/notification_service.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-
+  NotificationService().takeUserPermit();
   //init notifications
   NotificationService().initNotification();
 

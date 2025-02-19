@@ -13,6 +13,25 @@ class NotificationService {
 
   bool get isInitialized => _isInitiliazed;
 
+  Future<void> takeUserPermit() async {
+    // Kullanıcıdan bildirim izni iste
+    await requestNotificationPermission();
+
+    // Eğer Android 12+ ise, tam zamanlı (exact) alarm izni de iste
+    if ( Platform.isAndroid && await Permission.scheduleExactAlarm.isDenied) {
+      await Permission.scheduleExactAlarm.request();
+    }
+
+    // Burada bildirimleri başlat
+    await initNotification();
+  }
+
+  Future<void> requestNotificationPermission() async {
+    if (await Permission.notification.isDenied) {
+      await Permission.notification.request();
+    }
+  }
+
   // INITALIZE
   Future<void> initNotification() async {
     if (_isInitiliazed) return; //prevent re-initialization
@@ -90,27 +109,35 @@ class NotificationService {
       hour,
       minute,
     );
-    if(Platform.isAndroid){
-      await Permission.scheduleExactAlarm.request().isGranted;
-    }
+    // if(Platform.isAndroid){
+    //   await Permission.scheduleExactAlarm.request().isGranted;
+    // }
     //if (await Permission.scheduleExactAlarm.request().isGranted) {
-      await notificationsPlugin.zonedSchedule(
-        id,
-        title,
-        body,
-        scheduledDate,
-        notificationDetails(),
+    if (Platform.isAndroid) {
+      var status = await Permission.scheduleExactAlarm.request();
+      if (!status.isGranted) {
+        return;
+      }
+      await Permission.ignoreBatteryOptimizations.request();
+    }
 
-        //iOS specific : use exact time specified (vs related time)
-        uiLocalNotificationDateInterpretation:
-            UILocalNotificationDateInterpretation.absoluteTime,
+    await notificationsPlugin.zonedSchedule(
+      id,
+      title,
+      body,
+      scheduledDate,
+      notificationDetails(),
 
-        // android specific : allow notifications while device is in low - power mode
-        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      //iOS specific : use exact time specified (vs related time)
+      uiLocalNotificationDateInterpretation:
+          UILocalNotificationDateInterpretation.absoluteTime,
 
-        // Make notification repeat daily at the same time
-        matchDateTimeComponents: DateTimeComponents.time,
-      );
+      // android specific : allow notifications while device is in low - power mode
+      androidScheduleMode: AndroidScheduleMode.alarmClock,
+
+      // Make notification repeat daily at the same time
+      matchDateTimeComponents: DateTimeComponents.time,
+    );
     //}
     // Scheduled the notification
   }
