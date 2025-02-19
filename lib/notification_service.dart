@@ -1,4 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_timezone/flutter_timezone.dart';
+import 'package:timezone/timezone.dart' as tz;
+import 'package:timezone/data/latest.dart' as tz;
+import 'package:permission_handler/permission_handler.dart';
 
 class NotificationService {
   final notificationsPlugin = FlutterLocalNotificationsPlugin();
@@ -10,6 +16,11 @@ class NotificationService {
   // INITALIZE
   Future<void> initNotification() async {
     if (_isInitiliazed) return; //prevent re-initialization
+
+    // initialize timezone
+    tz.initializeTimeZones();
+    final String currentTimeZone = await FlutterTimezone.getLocalTimezone();
+    tz.setLocalLocation(tz.getLocation(currentTimeZone));
 
     //prepare android init settings
     const initSettingsAndroid =
@@ -36,13 +47,11 @@ class NotificationService {
   NotificationDetails notificationDetails() {
     return const NotificationDetails(
       android: AndroidNotificationDetails(
-        'daily_channel_id',
-        'Daily Notifications',
-        channelDescription: 'Daily Notification Channel',
-        icon: "@mipmap/ic_launcher",
-        importance: Importance.max,
-        priority: Priority.high
-      ),
+          'daily_channel_id', 'Daily Notifications',
+          channelDescription: 'Daily Notification Channel',
+          icon: "@mipmap/ic_launcher",
+          importance: Importance.max,
+          priority: Priority.high),
       iOS: DarwinNotificationDetails(),
     );
   }
@@ -52,9 +61,67 @@ class NotificationService {
     int id = 0,
     String? title,
     String? body,
-  })async{
+  }) async {
     return notificationsPlugin.show(id, title, body, notificationDetails());
   }
 
   // ON NOTIFICATION TAP
+
+  // SCHEDULED NOTIFICATION
+  // -> hour 0-23
+  // -> minute 0-59
+
+  Future<void> scheduledNotification({
+    int id = 1,
+    required String title,
+    required String body,
+    required int hour,
+    required int minute,
+  }) async {
+    // Get the current date/time in device's local timezone
+    final now = tz.TZDateTime.now(tz.local);
+
+    // Create a date/time
+    var scheduledDate = tz.TZDateTime(
+      tz.local,
+      now.year,
+      now.month,
+      now.day,
+      hour,
+      minute,
+    );
+    if(Platform.isAndroid){
+      await Permission.scheduleExactAlarm.request().isGranted;
+    }
+    //if (await Permission.scheduleExactAlarm.request().isGranted) {
+      await notificationsPlugin.zonedSchedule(
+        id,
+        title,
+        body,
+        scheduledDate,
+        notificationDetails(),
+
+        //iOS specific : use exact time specified (vs related time)
+        uiLocalNotificationDateInterpretation:
+            UILocalNotificationDateInterpretation.absoluteTime,
+
+        // android specific : allow notifications while device is in low - power mode
+        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+
+        // Make notification repeat daily at the same time
+        matchDateTimeComponents: DateTimeComponents.time,
+      );
+    //}
+    // Scheduled the notification
+  }
+
+  //Cancel all the notifications that are currently active
+  Future<void> cancelAllNotifications() async {
+    await notificationsPlugin.cancelAll();
+  }
+
+  // Cancel specific notification with notification id
+  Future<void> cancelSpecificNotification(int id) async {
+    await notificationsPlugin.cancel(id);
+  }
 }
