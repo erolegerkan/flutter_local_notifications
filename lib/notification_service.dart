@@ -18,7 +18,7 @@ class NotificationService {
     await requestNotificationPermission();
 
     // Eğer Android 12+ ise, tam zamanlı (exact) alarm izni de iste
-    if ( Platform.isAndroid && await Permission.scheduleExactAlarm.isDenied) {
+    if (Platform.isAndroid && await Permission.scheduleExactAlarm.isDenied) {
       await Permission.scheduleExactAlarm.request();
     }
 
@@ -66,11 +66,13 @@ class NotificationService {
   NotificationDetails notificationDetails() {
     return const NotificationDetails(
       android: AndroidNotificationDetails(
-          'daily_channel_id', 'Daily Notifications',
-          channelDescription: 'Daily Notification Channel',
-          icon: "@mipmap/ic_launcher",
-          importance: Importance.max,
-          priority: Priority.high),
+        'daily_channel_id',
+        'Daily Notifications',
+        channelDescription: 'Daily Notification Channel',
+        icon: "@mipmap/ic_launcher",
+        importance: Importance.max,
+        priority: Priority.high,
+      ),
       iOS: DarwinNotificationDetails(),
     );
   }
@@ -113,13 +115,13 @@ class NotificationService {
     //   await Permission.scheduleExactAlarm.request().isGranted;
     // }
     //if (await Permission.scheduleExactAlarm.request().isGranted) {
-    if (Platform.isAndroid) {
-      var status = await Permission.scheduleExactAlarm.request();
-      if (!status.isGranted) {
-        return;
-      }
-      await Permission.ignoreBatteryOptimizations.request();
-    }
+    // if (Platform.isAndroid) {
+    //   var status = await Permission.scheduleExactAlarm.request();
+    //   if (!status.isGranted) {
+    //     return;
+    //   }
+    //   await Permission.ignoreBatteryOptimizations.request();
+    // }
 
     await notificationsPlugin.zonedSchedule(
       id,
@@ -133,7 +135,7 @@ class NotificationService {
           UILocalNotificationDateInterpretation.absoluteTime,
 
       // android specific : allow notifications while device is in low - power mode
-      androidScheduleMode: AndroidScheduleMode.alarmClock,
+      androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
 
       // Make notification repeat daily at the same time
       matchDateTimeComponents: DateTimeComponents.time,
@@ -151,4 +153,5 @@ class NotificationService {
   Future<void> cancelSpecificNotification(int id) async {
     await notificationsPlugin.cancel(id);
   }
+
 }

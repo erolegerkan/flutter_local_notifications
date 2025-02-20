@@ -12,7 +12,7 @@ class HomePage extends StatelessWidget {
     TextEditingController hourController = TextEditingController();
     TextEditingController minuteController = TextEditingController();
     return Scaffold(
-      backgroundColor: Colors.blue,
+      backgroundColor: Colors.blueGrey,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -33,7 +33,7 @@ class HomePage extends StatelessWidget {
             Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(16),
-                color: Colors.purple,
+                color: Colors.indigoAccent,
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -66,6 +66,9 @@ class HomePage extends StatelessWidget {
                 ],
               ),
             ),
+            const SizedBox(
+              height: 20,
+            ),
             ElevatedButton(
               onPressed: () {
                 //NotificationService().initNotification;
@@ -73,7 +76,7 @@ class HomePage extends StatelessWidget {
                 int minute = int.parse(minuteController.text);
                 NotificationService().scheduledNotification(
                   title: 'Scheduled notification',
-                  body: 'Scheduled notification test',
+                  body: 'Scheduled notification test : $hour : $minute',
                   hour: hour,
                   minute: minute,
                 );
@@ -88,7 +91,7 @@ class HomePage extends StatelessWidget {
                 NotificationService().cancelAllNotifications();
                 log("All notifications cancelled successfully");
               },
-              child: Text('Cancel all notifications'),
+              child: Text('Cancel all the scheduled notifications'),
             ),
           ],
         ),
