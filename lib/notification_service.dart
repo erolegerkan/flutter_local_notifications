@@ -111,17 +111,6 @@ class NotificationService {
       hour,
       minute,
     );
-    // if(Platform.isAndroid){
-    //   await Permission.scheduleExactAlarm.request().isGranted;
-    // }
-    //if (await Permission.scheduleExactAlarm.request().isGranted) {
-    // if (Platform.isAndroid) {
-    //   var status = await Permission.scheduleExactAlarm.request();
-    //   if (!status.isGranted) {
-    //     return;
-    //   }
-    //   await Permission.ignoreBatteryOptimizations.request();
-    // }
 
     await notificationsPlugin.zonedSchedule(
       id,
