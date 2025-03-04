@@ -9,7 +9,7 @@ import 'package:permission_handler/permission_handler.dart';
 class NotificationService {
   final notificationsPlugin = FlutterLocalNotificationsPlugin();
 
-  bool _isInitiliazed = false;
+  final bool _isInitiliazed = false;
 
   bool get isInitialized => _isInitiliazed;
 
