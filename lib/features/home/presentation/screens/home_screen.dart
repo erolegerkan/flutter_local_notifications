@@ -25,6 +25,8 @@ class HomeScreen extends StatelessWidget {
             backgroundColor: CustomColors.backgroundColor,
           ),
           floatingActionButton: homeScreenProviderModel.currentScreen == ScreenEnum.homeWidget ? Container(
+            width: 60,
+            height: 60,
             decoration: BoxDecoration(
               color: CustomColors.backgroundColor,
               border: Border.all(color: CustomColors.foregroundColor),

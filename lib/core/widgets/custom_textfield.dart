@@ -16,7 +16,7 @@ class CustomTextfield extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: CustomColors.backgroundColor,
-        border: Border.all(color: CustomColors.foregroundColor),
+        border: Border.all(color: CustomColors.foregroundColor,width: 4),
         borderRadius: BorderRadius.circular(16),
       ),
       margin: EdgeInsets.all(8),
@@ -24,7 +24,14 @@ class CustomTextfield extends StatelessWidget {
       child: TextField(
         controller: controller,
         decoration: InputDecoration(
-          border: OutlineInputBorder(
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: BorderSide(
+              color: CustomColors.foregroundColor,
+              width: 2,
+            ),
+          ),
+          enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
             borderSide: BorderSide(
               color: CustomColors.foregroundColor,
