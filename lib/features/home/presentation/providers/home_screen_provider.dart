@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:flutter_local_notification/core/screen_enum.dart';
+import 'package:flutter_local_notification/core/enums/screen_enum.dart';
 import 'package:flutter_local_notification/features/home/presentation/widgets/home_screen_widget.dart';
 import 'package:flutter_local_notification/features/home/presentation/widgets/new_notification_widget.dart';
 

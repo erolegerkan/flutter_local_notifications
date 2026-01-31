@@ -16,7 +16,7 @@ class MainApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (context)=> HomeScreenProvider()),
       ],
-      child: const MaterialApp(
+      child: MaterialApp(
         debugShowCheckedModeBanner: false,
         home: HomeScreen()
       ),

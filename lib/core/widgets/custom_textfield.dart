@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notification/core/colors/custom_colors.dart';
 
 class CustomTextfield extends StatelessWidget {
   const CustomTextfield({
@@ -14,7 +15,8 @@ class CustomTextfield extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        border: Border.all(color: Colors.lightBlue),
+        color: CustomColors.backgroundColor,
+        border: Border.all(color: CustomColors.foregroundColor),
         borderRadius: BorderRadius.circular(16),
       ),
       margin: EdgeInsets.all(8),
@@ -24,10 +26,17 @@ class CustomTextfield extends StatelessWidget {
         decoration: InputDecoration(
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
-            borderSide: BorderSide(color: Colors.lightBlue, width: 2),
+            borderSide: BorderSide(
+              color: CustomColors.foregroundColor,
+              width: 2,
+            ),
           ),
           hintText: hintText,
-          hintStyle: TextStyle(color: Colors.blue),
+          hintStyle: TextStyle(
+            color: CustomColors.foregroundColor,
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
     );
