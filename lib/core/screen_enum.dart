@@ -1,0 +1,4 @@
+enum ScreenEnum {
+  homeWidget,
+  newNotificationWidget
+}
