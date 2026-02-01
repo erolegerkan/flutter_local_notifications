@@ -23,6 +23,11 @@ class CustomTextfield extends StatelessWidget {
       padding: EdgeInsets.all(8),
       child: TextField(
         controller: controller,
+        style: TextStyle(
+          color: CustomColors.foregroundColor,
+          fontWeight: FontWeight.bold,
+          fontSize: 20
+        ),
         decoration: InputDecoration(
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
